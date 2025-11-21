@@ -64,6 +64,12 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/surprise', surpriseRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Export the Express API
+module.exports = app;
+
+// Only listen if not running on Vercel (Vercel handles the port binding)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
