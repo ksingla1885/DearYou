@@ -114,22 +114,28 @@ const Gallery = () => {
 
                 {/* Upload Section */}
                 <div className="mb-12 text-center">
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <form onSubmit={handleUpload} className="inline-flex flex-col items-center space-y-2 bg-white p-4 rounded-lg shadow-md">
-                            <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-center justify-center gap-6">
+                        <form onSubmit={handleUpload} className="w-full max-w-md flex flex-col items-center space-y-4 bg-white p-6 rounded-xl shadow-md">
+                            <div className="w-full flex flex-col sm:flex-row items-center gap-4">
                                 <input
                                     type="file"
                                     onChange={handleFileChange}
                                     accept="image/*"
                                     disabled={uploading}
-                                    className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-romantic-100 file:text-romantic-500 hover:file:bg-romantic-200 disabled:opacity-50"
+                                    className="w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-romantic-100 file:text-romantic-500
+                                    hover:file:bg-romantic-200
+                                    disabled:opacity-50"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!selectedFile || uploading}
-                                    className="bg-romantic-500 text-white px-6 py-2 rounded-full font-medium hover:bg-romantic-900 transition-colors disabled:opacity-50"
+                                    className="w-full sm:w-auto whitespace-nowrap bg-romantic-500 text-white px-6 py-2 rounded-full font-medium hover:bg-romantic-900 transition-colors disabled:opacity-50"
                                 >
-                                    {uploading ? `Uploading... ${uploadProgress}%` : 'Upload Photo'}
+                                    {uploading ? `Uploading... ${uploadProgress}%` : 'Upload'}
                                 </button>
                             </div>
 
@@ -147,7 +153,7 @@ const Gallery = () => {
                         {images.length > 0 && (
                             <button
                                 onClick={handleDeleteAll}
-                                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full font-medium transition-colors flex items-center gap-2"
+                                className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors flex items-center gap-2 border border-red-200 px-4 py-2 rounded-full hover:bg-red-50"
                             >
                                 <span>🗑️</span>
                                 Delete All Images

@@ -73,17 +73,17 @@ const Messages = () => {
                             placeholder="Write a sweet note..."
                             className="w-full p-4 border border-romantic-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-romantic-300 resize-none h-32"
                         />
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                             <input
                                 type="text"
                                 value={author}
                                 onChange={(e) => setAuthor(e.target.value)}
                                 placeholder="Your Name (Optional)"
-                                className="p-2 border border-romantic-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-romantic-300"
+                                className="w-full sm:w-auto flex-grow p-2 border border-romantic-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-romantic-300"
                             />
                             <button
                                 type="submit"
-                                className="bg-romantic-500 text-white px-8 py-2 rounded-full font-medium hover:bg-romantic-900 transition-colors"
+                                className="w-full sm:w-auto bg-romantic-500 text-white px-8 py-2 rounded-full font-medium hover:bg-romantic-900 transition-colors"
                             >
                                 Post Note
                             </button>
