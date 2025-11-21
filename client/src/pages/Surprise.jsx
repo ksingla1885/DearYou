@@ -14,6 +14,7 @@ const Surprise = () => {
 
     const fetchSurprises = async () => {
         try {
+            console.log('Fetching surprises from:', `${API_URL}/api/surprise`);
             const res = await axios.get(`${API_URL}/api/surprise`);
             setSurprises(res.data);
         } catch (err) {
