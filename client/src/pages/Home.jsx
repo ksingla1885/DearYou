@@ -16,7 +16,7 @@ const Section = ({ children, className }) => (
 );
 
 const Home = () => {
-  const [nickname, setNickname] = useState('NAME');
+  const [nickname, setNickname] = useState('Chahat');
 
   return (
     <div className="min-h-screen bg-[#fff0f5] relative overflow-hidden font-sans">
@@ -224,7 +224,7 @@ const Home = () => {
             <h2 className="text-3xl font-serif text-romantic-900 mb-6">My Promise</h2>
             <p className="text-lg text-gray-700 leading-relaxed italic mb-6">
               "To always be there, to always care, and to always love you.
-              No matter where life takes us, you will always be my [NAME]."
+              No matter where life takes us, you will always be my chahat."
             </p>
             <div className="flex justify-center gap-4 text-4xl">
               🌹 💕 ✨
