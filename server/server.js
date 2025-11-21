@@ -32,23 +32,37 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
+// Ensure uploads directory exists (only in development or if writable)
+try {
+    const uploadsDir = path.join(__dirname, 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir);
+    }
+} catch (err) {
+    console.log('Could not create uploads directory (likely read-only environment), skipping...');
 }
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-})
-    .then(() => console.log('MongoDB Connected Successfully ✅'))
-    .catch(err => {
+// MongoDB Connection (Optimized for Serverless)
+let isConnected = false;
+
+const connectDB = async () => {
+    if (isConnected) return;
+
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000,
+        });
+        isConnected = conn.connections[0].readyState;
+        console.log('MongoDB Connected Successfully ✅');
+    } catch (err) {
         console.error('MongoDB Connection Error:', err.message);
-        console.log('Server will continue running without database...');
-    });
+    }
+};
+
+// Connect immediately
+connectDB();
 
 // Routes
 app.get('/', (req, res) => {
