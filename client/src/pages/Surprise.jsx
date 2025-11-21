@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import API_URL from '../config/api';
 
 const Surprise = () => {
     const [surprises, setSurprises] = useState([]);
@@ -12,7 +13,7 @@ const Surprise = () => {
 
     const fetchSurprises = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/surprise');
+            const res = await axios.get(`${API_URL}/api/surprise`);
             setSurprises(res.data);
         } catch (err) {
             console.error('Error fetching surprises:', err);
@@ -48,7 +49,7 @@ const Surprise = () => {
                                     <p className="text-gray-700 mb-6">{item.content}</p>
                                     {item.image && (
                                         <img
-                                            src={`http://localhost:5000${item.image}`}
+                                            src={`${API_URL}${item.image}`}
                                             alt="Surprise"
                                             className="max-w-md mx-auto rounded-lg shadow-md"
                                         />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import API_URL from '../config/api';
 
 const Gallery = () => {
     const [images, setImages] = useState([]);
@@ -15,7 +16,7 @@ const Gallery = () => {
 
     const fetchImages = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/gallery');
+            const res = await axios.get(`${API_URL}/api/gallery`);
             setImages(res.data);
         } catch (err) {
             console.error('Error fetching images:', err);
@@ -36,7 +37,7 @@ const Gallery = () => {
         setUploading(true);
         setUploadProgress(0);
         try {
-            await axios.post('http://localhost:5000/api/gallery/upload', formData, {
+            await axios.post(`${API_URL}/api/gallery/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -68,7 +69,7 @@ const Gallery = () => {
             setImages(prevImages => prevImages.filter(img => img._id !== imageId));
 
             // Then delete from server
-            await axios.delete(`http://localhost:5000/api/gallery/${imageId}`);
+            await axios.delete(`${API_URL}/api/gallery/${imageId}`);
 
         } catch (err) {
             console.error('Error deleting image:', err);
@@ -88,7 +89,7 @@ const Gallery = () => {
             setImages([]);
 
             // Delete from server
-            const response = await axios.delete('http://localhost:5000/api/gallery/all/images');
+            const response = await axios.delete(`${API_URL}/api/gallery/all/images`);
             console.log(response.data.message);
 
         } catch (err) {
