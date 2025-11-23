@@ -1,12 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const Landing = () => {
     const navigate = useNavigate();
+    const [showCodeInput, setShowCodeInput] = useState(false);
+    const [code, setCode] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
-        navigate('/home');
+        if (!showCodeInput) {
+            navigate('/home');
+        }
+    };
+
+    const handleCodeSubmit = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setLoading(true);
+        setError('');
+
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            const response = await fetch(`${API_URL}/api/shared-links/${code}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Invalid code');
+            }
+
+            // Save to localStorage so Home page can pick it up
+            localStorage.setItem('sharedLinkName', data.recipientName);
+            navigate('/home');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -54,7 +85,7 @@ const Landing = () => {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 text-center px-4">
+            <div className="relative z-10 text-center px-4 w-full max-w-lg">
                 {/* Animated Heart */}
                 <motion.div
                     initial={{ scale: 0 }}
@@ -96,32 +127,87 @@ const Landing = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1, duration: 0.8 }}
-                    className="text-2xl md:text-3xl text-romantic-800 font-light mb-12"
+                    className="text-2xl md:text-3xl text-romantic-800 font-light mb-8"
                 >
                     A special place, just for you
                 </motion.p>
 
-                {/* Call to Action */}
+                {/* Call to Action & Code Input */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.5, duration: 0.8 }}
+                    className="space-y-4"
                 >
-                    <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="inline-block"
-                    >
-                        <div className="bg-white/50 backdrop-blur-sm px-8 py-4 rounded-full border-2 border-romantic-400 shadow-lg">
-                            <p className="text-romantic-900 text-lg font-medium">
-                                Click anywhere to enter my heart✨
-                            </p>
+                    {!showCodeInput ? (
+                        <>
+                            <motion.div
+                                animate={{ y: [0, -10, 0] }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="inline-block"
+                            >
+                                <div className="bg-white/50 backdrop-blur-sm px-8 py-4 rounded-full border-2 border-romantic-400 shadow-lg mb-4">
+                                    <p className="text-romantic-900 text-lg font-medium">
+                                        Click anywhere to enter my heart✨
+                                    </p>
+                                </div>
+                            </motion.div>
+
+                            <div className="flex flex-col gap-3 items-center" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                    onClick={() => setShowCodeInput(true)}
+                                    className="text-romantic-700 hover:text-romantic-900 underline underline-offset-4 text-sm font-medium transition-colors"
+                                >
+                                    Have a special code?
+                                </button>
+                                <button
+                                    onClick={() => navigate('/create')}
+                                    className="text-romantic-600 hover:text-romantic-800 text-xs transition-colors bg-white/30 px-3 py-1 rounded-full"
+                                >
+                                    Create your own version 🎁
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <div onClick={(e) => e.stopPropagation()} className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 animate-fadeIn">
+                            <form onSubmit={handleCodeSubmit} className="space-y-4">
+                                <h3 className="text-romantic-900 font-serif text-xl">Enter Your Code</h3>
+                                <input
+                                    type="text"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    placeholder="Enter code here..."
+                                    className="w-full px-4 py-2 rounded-lg border border-romantic-300 focus:border-romantic-500 outline-none bg-white/80"
+                                    autoFocus
+                                />
+                                {error && <p className="text-red-500 text-sm">{error}</p>}
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowCodeInput(false);
+                                            setError('');
+                                            setCode('');
+                                        }}
+                                        className="flex-1 px-4 py-2 rounded-lg border border-romantic-300 text-romantic-700 hover:bg-romantic-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="flex-1 px-4 py-2 rounded-lg bg-romantic-500 text-white hover:bg-romantic-600 transition-colors shadow-md"
+                                    >
+                                        {loading ? 'Checking...' : 'Enter ❤️'}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </motion.div>
+                    )}
                 </motion.div>
 
                 {/* Floating Hearts */}
@@ -153,18 +239,20 @@ const Landing = () => {
             </div>
 
             {/* Hint Text */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-romantic-700 text-sm"
-            >
-                Tap to continue
-            </motion.div>
+            {!showCodeInput && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-romantic-700 text-sm pointer-events-none"
+                >
+                    Tap to continue
+                </motion.div>
+            )}
         </div>
     );
 };

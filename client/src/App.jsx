@@ -9,6 +9,7 @@ import OpenWhen from './pages/OpenWhen';
 import Surprise from './pages/Surprise';
 import Birthday from './pages/Birthday';
 import MusicPlayer from './components/MusicPlayer';
+import CreateLink from './pages/CreateLink';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/open-when" element={<OpenWhen />} />
                 <Route path="/birthday" element={<Birthday />} />
                 <Route path="/surprise" element={<Surprise />} />
+                <Route path="/create" element={<CreateLink />} />
             </Routes>
         </Router>
     );

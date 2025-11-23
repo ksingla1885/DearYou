@@ -84,6 +84,7 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/surprise', surpriseRoutes);
 app.use('/api/open-when', require('./routes/openWhen'));
+app.use('/api/shared-links', require('./routes/sharedLink'));
 
 // Export the Express API
 module.exports = app;
