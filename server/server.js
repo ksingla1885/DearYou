@@ -83,6 +83,7 @@ const surpriseRoutes = require('./routes/surprise');
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/surprise', surpriseRoutes);
+app.use('/api/open-when', require('./routes/openWhen'));
 
 // Export the Express API
 module.exports = app;

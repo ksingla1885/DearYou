@@ -11,6 +11,8 @@ const Navbar = () => {
         { path: '/about', label: 'About' },
         { path: '/gallery', label: 'Gallery' },
         { path: '/messages', label: 'Messages' },
+        { path: '/open-when', label: 'Open When' },
+        { path: '/birthday', label: 'Birthday' },
         { path: '/surprise', label: 'Surprise' },
     ];
 
@@ -32,8 +34,8 @@ const Navbar = () => {
                                     key={link.path}
                                     to={link.path}
                                     className={`text-sm font-medium transition-colors duration-300 hover:text-romantic-500 ${location.pathname === link.path
-                                            ? 'text-romantic-600 font-bold border-b-2 border-romantic-400'
-                                            : 'text-gray-600'
+                                        ? 'text-romantic-600 font-bold border-b-2 border-romantic-400'
+                                        : 'text-gray-600'
                                         }`}
                                 >
                                     {link.label}
@@ -78,8 +80,8 @@ const Navbar = () => {
                                 to={link.path}
                                 onClick={() => setIsOpen(false)}
                                 className={`block px-3 py-3 rounded-md text-base font-medium text-center ${location.pathname === link.path
-                                        ? 'text-romantic-600 bg-romantic-50'
-                                        : 'text-gray-700 hover:text-romantic-500 hover:bg-gray-50'
+                                    ? 'text-romantic-600 bg-romantic-50'
+                                    : 'text-gray-700 hover:text-romantic-500 hover:bg-gray-50'
                                     }`}
                             >
                                 {link.label}
