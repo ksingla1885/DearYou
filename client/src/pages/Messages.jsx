@@ -18,7 +18,10 @@ const Messages = () => {
     const fetchMessages = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`${API_URL}/api/messages`);
+            const code = localStorage.getItem('sharedLinkCode');
+            const res = await axios.get(`${API_URL}/api/messages`, {
+                params: { code }
+            });
             setMessages(res.data);
             setError(null);
         } catch (err) {
@@ -46,10 +49,13 @@ const Messages = () => {
         e.preventDefault();
         if (!newMessage.trim()) return;
 
+        const code = localStorage.getItem('sharedLinkCode');
+
         try {
             await axios.post(`${API_URL}/api/messages`, {
                 content: newMessage,
-                author: author || 'Anonymous'
+                author: author || 'Anonymous',
+                sharedLinkCode: code
             });
             setNewMessage('');
             setAuthor('');

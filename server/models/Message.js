@@ -9,6 +9,10 @@ const MessageSchema = new mongoose.Schema({
         type: String,
         default: 'Anonymous'
     },
+    sharedLinkCode: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
