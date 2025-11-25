@@ -32,6 +32,18 @@ const Landing = () => {
 
             // Save to localStorage so Home page can pick it up
             localStorage.setItem('sharedLinkName', data.recipientName);
+            localStorage.setItem('sharedLinkCode', code);
+
+            if (data.backgroundImage) {
+                let fullImageUrl = data.backgroundImage;
+                if (fullImageUrl.startsWith('/')) {
+                    fullImageUrl = `${API_URL}${fullImageUrl}`;
+                }
+                localStorage.setItem('sharedLinkImage', fullImageUrl);
+            } else {
+                localStorage.removeItem('sharedLinkImage');
+            }
+
             navigate('/home');
         } catch (err) {
             setError(err.message);

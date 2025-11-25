@@ -10,11 +10,11 @@ const Navbar = () => {
         { path: '/home', label: 'Home' },
         { path: '/about', label: 'About' },
         { path: '/gallery', label: 'Gallery' },
-        { path: '/messages', label: 'Messages' },
+        { path: '/messages', label: localStorage.getItem('sharedLinkCode') ? 'Leave a Message' : 'Messages' },
         { path: '/open-when', label: 'Open When' },
         { path: '/birthday', label: 'Birthday' },
         { path: '/surprise', label: 'Surprise' },
-    ];
+    ].filter(Boolean);
 
     return (
         <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
@@ -41,6 +41,20 @@ const Navbar = () => {
                                     {link.label}
                                 </Link>
                             ))}
+
+                            {localStorage.getItem('sharedLinkCode') && (
+                                <button
+                                    onClick={() => {
+                                        localStorage.removeItem('sharedLinkCode');
+                                        localStorage.removeItem('sharedLinkName');
+                                        localStorage.removeItem('sharedLinkImage');
+                                        window.location.href = '/home';
+                                    }}
+                                    className="text-sm font-medium text-red-500 hover:text-red-700 transition-colors border border-red-200 px-3 py-1 rounded-full hover:bg-red-50"
+                                >
+                                    Exit View
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -87,6 +101,20 @@ const Navbar = () => {
                                 {link.label}
                             </Link>
                         ))}
+
+                        {localStorage.getItem('sharedLinkCode') && (
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem('sharedLinkCode');
+                                    localStorage.removeItem('sharedLinkName');
+                                    localStorage.removeItem('sharedLinkImage');
+                                    window.location.href = '/home';
+                                }}
+                                className="block w-full px-3 py-3 rounded-md text-base font-medium text-center text-red-500 hover:bg-red-50"
+                            >
+                                Exit View
+                            </button>
+                        )}
                     </div>
                 </motion.div>
             )}

@@ -150,9 +150,20 @@ const Birthday = () => {
 
                                 <h2 className="text-4xl font-serif text-gray-800 mb-6 relative z-10">My Wish For You ❤️</h2>
                                 <p className="text-xl text-gray-600 leading-relaxed italic mb-8 font-serif relative z-10">
-                                    "On this special day, I wish you all the happiness your heart can hold.
-                                    May your year be filled with laughter, love, and endless adventures.
-                                    You deserve the world and more. I'm so lucky to celebrate you today and every day."
+                                    **"Happy Birthday, my love.
+                                    Today isn’t just another day — it’s the day the world was gifted with you.
+
+                                    I wish your heart overflows with happiness, laughter, peace, and all the magic life can offer. You deserve every beautiful moment, every dream fulfilled, every feeling of warmth and love life holds.
+
+                                    I’m endlessly grateful to walk beside you — through joy, through growth, through chaos, and through every quiet little moment in between.
+                                    With you, everything feels softer, brighter, and more meaningful.
+
+                                    You are my favorite person, my comfort, my joy, and my heart’s safest place.
+                                    I celebrate you today, tomorrow, and for every lifetime after this one.
+
+                                    You deserve the world and more — and I promise, with all that I am, to love you in every way possible."**
+
+                                    💖✨
                                 </p>
 
                                 <div className="flex justify-center gap-6 text-5xl relative z-10">

@@ -9,6 +9,8 @@ const CreateLink = () => {
         recipientName: '',
         code: ''
     });
+    const [backgroundImage, setBackgroundImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [generatedLink, setGeneratedLink] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -20,6 +22,19 @@ const CreateLink = () => {
         });
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setBackgroundImage(file);
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -28,12 +43,18 @@ const CreateLink = () => {
 
         try {
             const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            // Create FormData to handle file upload
+            const formDataToSend = new FormData();
+            formDataToSend.append('recipientName', formData.recipientName);
+            formDataToSend.append('code', formData.code);
+            if (backgroundImage) {
+                formDataToSend.append('backgroundImage', backgroundImage);
+            }
+
             const response = await fetch(`${API_URL}/api/shared-links/create`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+                body: formDataToSend
             });
 
             const data = await response.json();
@@ -41,6 +62,10 @@ const CreateLink = () => {
             if (!response.ok) {
                 throw new Error(data.message || 'Something went wrong');
             }
+
+            // Save to localStorage so the creator can see the changes immediately
+            localStorage.setItem('sharedLinkName', formData.recipientName);
+            localStorage.setItem('sharedLinkCode', formData.code);
 
             setGeneratedLink(formData.code);
         } catch (err) {
@@ -102,6 +127,37 @@ const CreateLink = () => {
                                 <p className="text-xs text-gray-500 mt-1">This code will be used to access the page.</p>
                             </div>
 
+                            <div>
+                                <label className="block text-gray-700 mb-2 font-medium">Custom Background Image (Optional)</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="w-full px-4 py-3 rounded-xl border border-romantic-200 focus:border-romantic-500 focus:ring-2 focus:ring-romantic-200 outline-none transition-all bg-white/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-romantic-100 file:text-romantic-700 hover:file:bg-romantic-200"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Upload a photo to personalize the background.</p>
+
+                                {imagePreview && (
+                                    <div className="mt-3 relative">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            className="w-full h-32 object-cover rounded-xl border-2 border-romantic-200"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setBackgroundImage(null);
+                                                setImagePreview(null);
+                                            }}
+                                            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
                             {error && (
                                 <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">
                                     {error}
@@ -141,6 +197,8 @@ const CreateLink = () => {
                                 onClick={() => {
                                     setGeneratedLink('');
                                     setFormData({ recipientName: '', code: '' });
+                                    setBackgroundImage(null);
+                                    setImagePreview(null);
                                 }}
                                 className="text-romantic-500 hover:text-romantic-700 font-medium"
                             >

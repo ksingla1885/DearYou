@@ -1,9 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const SharedLink = require('../models/SharedLink');
+const multer = require('multer');
+const path = require('path');
+
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Cloudinary Config
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'dearyou-backgrounds',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
+        transformation: [
+            { width: 1920, crop: 'limit' }, // Limit width for backgrounds
+            { quality: 'auto:good' },
+            { fetch_format: 'auto' }
+        ]
+    },
+});
+
+const upload = multer({ storage: storage });
 
 // Create a new shared link
-router.post('/create', async (req, res) => {
+router.post('/create', upload.single('backgroundImage'), async (req, res) => {
     try {
         const { code, recipientName } = req.body;
 
@@ -15,7 +42,8 @@ router.post('/create', async (req, res) => {
 
         const newLink = new SharedLink({
             code,
-            recipientName
+            recipientName,
+            backgroundImage: req.file ? req.file.path : null
         });
 
         await newLink.save();

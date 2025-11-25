@@ -12,6 +12,10 @@ const sharedLinkSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    backgroundImage: {
+        type: String,
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

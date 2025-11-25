@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hero3D from '../components/Hero3D';
 import Navbar from '../components/Navbar';
@@ -17,6 +17,30 @@ const Section = ({ children, className }) => (
 
 const Home = () => {
   const [nickname, setNickname] = useState(localStorage.getItem('sharedLinkName') || 'Chahat');
+  const [customBackground, setCustomBackground] = useState(localStorage.getItem('sharedLinkImage') || null);
+
+  useEffect(() => {
+    // Fetch custom background if available
+    const sharedLinkCode = localStorage.getItem('sharedLinkCode');
+
+    if (sharedLinkCode) {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+      fetch(`${API_URL}/api/shared-links/${sharedLinkCode}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.backgroundImage) {
+            let fullImageUrl = data.backgroundImage;
+            // Only prepend API_URL if it's a relative path (starts with /)
+            if (fullImageUrl.startsWith('/')) {
+              fullImageUrl = `${API_URL}${fullImageUrl}`;
+            }
+            setCustomBackground(fullImageUrl);
+          }
+        })
+        .catch(err => console.error('Error fetching background:', err));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#fff0f5] relative overflow-hidden font-sans">
@@ -37,7 +61,7 @@ const Home = () => {
             <div
               className="absolute inset-0 bg-cover bg-center opacity-35"
               style={{
-                backgroundImage: 'url(/couple-photo.jpg)',
+                backgroundImage: `url(${customBackground || '/couple-photo.jpg'})`,
                 filter: 'blur(1px) brightness(1.2)',
               }}
             />
@@ -81,7 +105,7 @@ const Home = () => {
         <Section className="max-w-4xl mx-auto">
           <div className="relative bg-white/70 backdrop-blur-sm p-12 rounded-3xl shadow-xl border border-white/50 overflow-hidden">
             {/* Background Image */}
-            <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: 'url(/couple-photo.jpg)', filter: 'blur(2px)' }} />
+            <div className="absolute inset-0 opacity-10 bg-cover bg-center" style={{ backgroundImage: `url(${customBackground || '/couple-photo.jpg'})`, filter: 'blur(2px)' }} />
             <div className="relative z-10">
               <h2 className="text-4xl font-serif text-romantic-900 mb-8 text-center">A Letter to You</h2>
               <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
@@ -104,7 +128,7 @@ const Home = () => {
         {/* Our Story / Timeline */}
         <Section className="max-w-4xl mx-auto text-center relative">
           {/* Background Image */}
-          <div className="absolute inset-0 opacity-5 bg-cover bg-center rounded-3xl" style={{ backgroundImage: 'url(/couple-photo.jpg)', filter: 'blur(3px)' }} />
+          <div className="absolute inset-0 opacity-5 bg-cover bg-center rounded-3xl" style={{ backgroundImage: `url(${customBackground || '/couple-photo.jpg'})`, filter: 'blur(3px)' }} />
           <div className="relative z-10">
             <h2 className="text-4xl font-serif text-romantic-900 mb-12">Our Journey</h2>
             <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-romantic-300 before:to-transparent">
@@ -193,30 +217,32 @@ const Home = () => {
           </div>
         </Section>
 
-        {/* Love Quotes Section */}
-        <Section className="max-w-5xl mx-auto">
-          <h2 className="text-4xl font-serif text-romantic-900 mb-12 text-center">Words from My Heart</h2>
-          <div className="space-y-8">
-            {[
-              "You are my today and all of my tomorrows.",
-              "In your arms, I've found my home.",
-              "Every love song makes sense when I think of you.",
-              "You're the reason I believe in forever."
-            ].map((quote, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-gradient-to-r from-romantic-100 to-romantic-200 p-8 rounded-2xl shadow-md"
-              >
-                <p className="text-2xl font-serif text-romantic-900 text-center italic">
-                  "{quote}"
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </Section>
+        {/* Love Quotes Section - Only show if NOT using a shared link */}
+        {!localStorage.getItem('sharedLinkCode') && (
+          <Section className="max-w-5xl mx-auto">
+            <h2 className="text-4xl font-serif text-romantic-900 mb-12 text-center">Words from My Heart</h2>
+            <div className="space-y-8">
+              {[
+                "You are my today and all of my tomorrows.",
+                "In your arms, I've found my home.",
+                "Every love song makes sense when I think of you.",
+                "You're the reason I believe in forever."
+              ].map((quote, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-gradient-to-r from-romantic-100 to-romantic-200 p-8 rounded-2xl shadow-md"
+                >
+                  <p className="text-2xl font-serif text-romantic-900 text-center italic">
+                    "{quote}"
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </Section>
+        )}
 
         {/* Final Promise */}
         <Section className="text-center pb-32">
