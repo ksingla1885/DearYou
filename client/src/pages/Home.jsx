@@ -24,7 +24,8 @@ const Home = () => {
     const sharedLinkCode = localStorage.getItem('sharedLinkCode');
 
     if (sharedLinkCode) {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      API_URL = API_URL.replace(/\/+$/, ''); // Remove trailing slashes to prevent double slashes
 
       fetch(`${API_URL}/api/shared-links/${sharedLinkCode}`)
         .then(res => res.json())

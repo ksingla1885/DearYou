@@ -50,6 +50,8 @@ try {
 
 // MongoDB Connection (Optimized for Serverless)
 let isConnected = false;
+let isConnecting = false;
+let connectionPromise = null;
 
 const connectDB = async () => {
     if (isConnected) {
@@ -60,16 +62,24 @@ const connectDB = async () => {
         throw new Error('Please define the MONGO_URI environment variable inside Vercel Dashboard');
     }
 
+    if (isConnecting && connectionPromise) {
+        await connectionPromise;
+        return;
+    }
+
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
+        isConnecting = true;
+        connectionPromise = mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
-            bufferCommands: false, // Prevent silent timeout issues
         });
+        const conn = await connectionPromise;
         isConnected = conn.connections[0].readyState;
+        isConnecting = false;
         console.log('MongoDB Connected Successfully ✅');
     } catch (err) {
+        isConnecting = false;
         console.error('MongoDB Connection Error:', err.message);
         throw err; // Actually throw to the middleware so Vercel logs the crash
     }

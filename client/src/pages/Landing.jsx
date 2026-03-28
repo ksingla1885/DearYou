@@ -22,7 +22,8 @@ const Landing = () => {
         setError('');
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            API_URL = API_URL.replace(/\/+$/, ''); // Remove trailing slashes to prevent 308 CORS error
             const response = await fetch(`${API_URL}/api/shared-links/${code}`);
             const data = await response.json();
 
