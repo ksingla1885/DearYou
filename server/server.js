@@ -52,23 +52,44 @@ try {
 let isConnected = false;
 
 const connectDB = async () => {
-    if (isConnected) return;
+    if (isConnected) {
+        return;
+    }
+
+    if (!process.env.MONGO_URI) {
+        throw new Error('Please define the MONGO_URI environment variable inside Vercel Dashboard');
+    }
 
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
+            bufferCommands: false, // Prevent silent timeout issues
         });
         isConnected = conn.connections[0].readyState;
         console.log('MongoDB Connected Successfully ✅');
     } catch (err) {
         console.error('MongoDB Connection Error:', err.message);
+        throw err; // Actually throw to the middleware so Vercel logs the crash
     }
 };
 
-// Connect immediately
-connectDB();
+// Middleware to ensure DB is connected for serverless environments
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        res.status(500).json({
+            message: 'Database Connection Error. Check Vercel Environment Variables.',
+            error: error.message
+        });
+    }
+});
+
+// Try to connect immediately for local development feedback
+connectDB().catch(err => console.error("Initial connection failed:", err.message));
 
 // Routes
 app.get('/', (req, res) => {
