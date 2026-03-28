@@ -7,7 +7,6 @@ import Gallery from './pages/Gallery';
 import Messages from './pages/Messages';
 import OpenWhen from './pages/OpenWhen';
 import Surprise from './pages/Surprise';
-import Birthday from './pages/Birthday';
 import MusicPlayer from './components/MusicPlayer';
 import CreateLink from './pages/CreateLink';
 
@@ -22,7 +21,6 @@ function App() {
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/open-when" element={<OpenWhen />} />
-                <Route path="/birthday" element={<Birthday />} />
                 <Route path="/surprise" element={<Surprise />} />
                 <Route path="/create" element={<CreateLink />} />
             </Routes>

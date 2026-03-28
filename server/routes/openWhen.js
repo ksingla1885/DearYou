@@ -5,9 +5,6 @@ const OpenWhen = require('../models/OpenWhen');
 // GET all letters
 router.get('/', async (req, res) => {
     try {
-        // 1. Explicitly remove "Birthday" cards as requested
-        await OpenWhen.deleteMany({ title: "Open when it's your birthday" });
-
         // 2. Fetch all remaining letters
         let letters = await OpenWhen.find().sort({ createdAt: 1 });
 
@@ -31,7 +28,7 @@ router.get('/', async (req, res) => {
             letters = uniqueLetters;
         }
 
-        // 4. Define the list of cards we WANT to ensure exist (excluding Birthday)
+        // 4. Define the list of cards we WANT to ensure exist
         const desiredCards = [
             {
                 title: "Open when you're angry at me",
