@@ -11,6 +11,11 @@ const Landing = () => {
 
     const handleClick = () => {
         if (!showCodeInput) {
+            // Clear any existing shared link data when entering via the public path
+            // This ensures that clicking the background always leads to the default public view
+            localStorage.removeItem('sharedLinkName');
+            localStorage.removeItem('sharedLinkCode');
+            localStorage.removeItem('sharedLinkImage');
             navigate('/home');
         }
     };

@@ -21,6 +21,7 @@ function App() {
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/open-when" element={<OpenWhen />} />
+                {/* <Route path="/surprise" element={<Surprise />} /> */}
                 <Route path="/create" element={<CreateLink />} />
             </Routes>
         </Router>

@@ -12,6 +12,7 @@ const Navbar = () => {
         { path: '/gallery', label: 'Gallery' },
         { path: '/messages', label: localStorage.getItem('sharedLinkCode') ? 'Leave a Message' : 'Messages' },
         { path: '/open-when', label: 'Open When' },
+        // { path: '/surprise', label: 'Surprise' },
     ].filter(Boolean);
 
     return (
